@@ -38,3 +38,38 @@ impl UF {
         self.count -= 1;
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn uf_count_works() {
+        let uf = UF::new(2);
+        assert_eq!(uf.count(), 2);
+    }
+
+    #[test]
+    fn uf_find_works() {
+        let uf = UF::new(2);
+        assert_eq!(uf.find(1), 1);
+    }
+
+    #[test]
+    fn uf_connected_works() {
+        let mut uf = UF::new(3);
+        uf.union(0, 2);
+        assert_eq!(uf.connected(0, 2), true);
+        assert_eq!(uf.connected(0, 1), false);
+    }
+
+    #[test]
+    fn uf_union_works() {
+        let mut uf = UF::new(3);
+        uf.union(0, 1);
+        uf.union(1, 2);
+        assert_eq!(uf.connected(0, 1), true);
+        assert_eq!(uf.connected(1, 2), true);
+        assert_eq!(uf.connected(0, 2), true);
+    }
+}
