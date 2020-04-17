@@ -12,6 +12,13 @@ impl UF {
         }
     }
 
+    pub fn given(v: Vec<usize>) -> UF {
+        UF {
+            count: v.len(),
+            id: v,
+        }
+    }
+
     pub fn count(&self) -> usize {
         self.count
     }
@@ -37,6 +44,23 @@ impl UF {
         }
         self.count -= 1;
     }
+
+    pub fn find(&self, mut p: usize) -> usize {
+        while p != self.id[p] {
+            p = self.id[p];
+        }
+        p
+    }
+
+    pub fn quick_union(&mut self, p: usize, q: usize) {
+        let p_root = self.find(p);
+        let q_root = self.find(q);
+        if p_root == q_root {
+            return;
+        }
+        self.id[p_root] = q_root;
+        self.count -= 1;
+    }
 }
 
 #[cfg(test)]
@@ -50,7 +74,7 @@ mod tests {
     }
 
     #[test]
-    fn uf_find_works() {
+    fn uf_quick_find_works() {
         let uf = UF::new(2);
         assert_eq!(uf.quick_find(1), 1);
     }
@@ -71,5 +95,19 @@ mod tests {
         assert_eq!(uf.connected(0, 1), true);
         assert_eq!(uf.connected(1, 2), true);
         assert_eq!(uf.connected(0, 2), true);
+    }
+
+    #[test]
+    fn uf_find_works() {
+        let uf = UF::given(vec![1, 1, 1, 8, 3, 0, 5, 1, 8, 8]);
+        assert_eq!(uf.find(5), 1);
+        assert_eq!(uf.find(9), 8);
+    }
+
+    #[test]
+    fn uf_quick_union_works() {
+        let mut uf = UF::given(vec![1, 1, 1, 8, 3, 0, 5, 1, 8, 8]);
+        uf.quick_union(5, 9);
+        assert_eq!(uf.id, vec![1, 8, 1, 8, 3, 0, 5, 1, 8, 8]);
     }
 }
