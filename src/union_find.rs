@@ -16,17 +16,17 @@ impl UF {
         self.count
     }
 
-    pub fn find(&self, p: usize) -> usize {
+    pub fn quick_find(&self, p: usize) -> usize {
         self.id[p]
     }
 
     pub fn connected(&self, p: usize, q: usize) -> bool {
-        self.find(p) == self.find(q)
+        self.quick_find(p) == self.quick_find(q)
     }
 
     pub fn union(&mut self, p: usize, q: usize) {
-        let p_id = self.find(p);
-        let q_id = self.find(q);
+        let p_id = self.quick_find(p);
+        let q_id = self.quick_find(q);
         if p_id == q_id {
             return;
         }
@@ -52,7 +52,7 @@ mod tests {
     #[test]
     fn uf_find_works() {
         let uf = UF::new(2);
-        assert_eq!(uf.find(1), 1);
+        assert_eq!(uf.quick_find(1), 1);
     }
 
     #[test]
